@@ -6,6 +6,7 @@ var createError = require('http-errors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var vmsRouter = require('./routes/vms');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.all('*',function (req,res,next) {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/vms', vmsRouter);
 
 app.use(function (req,res,next) {
     next(createError(404));
