@@ -10,7 +10,7 @@ const dbName = "cloudenv";
 router.get('/', function(req, res, next) {
     mongoClient.connect(function(err, db) {
         if (err) throw err;
-        var addVm = {id: Mock.id(), name: "my-vm", status: "active"};
+        var addVm = {id: "001", name: "my-vm", status: "active"};
         client.db(dbName).collection("vms").insertOne(addVm, function (err, res) {
             if (err) throw err;
             console.log("文档插入成功");
