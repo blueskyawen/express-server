@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/vms";
-var mongoClient = new MongoClient(url,{ useNewUrlParser: true });
+var mongoClient = new MongoClient(url,{ useNewUrlParser: true, useUnifiedTopology: true });
 
 router.get('/', function(req, res, next) {
     mongoClient.connect(function(err, db) {
