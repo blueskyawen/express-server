@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
         if (err) throw err;
         console.log("vms-数据库已创建!");
         db.close();
+        res.end('vms-数据库已创建!');
     });
 });
 
