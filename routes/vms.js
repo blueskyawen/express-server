@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/add', function(req, res, next) {
-    mongoClient.connect(function(err, db) {
+    MongoClient.connect(url, { useNewUrlParser: true}, function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").insertOne(req.body, function (err, result) {
             if (err) throw err;
@@ -30,7 +30,7 @@ router.post('/add', function(req, res, next) {
 });
 
 router.put('/:id', function(req, res, next) {
-    mongoClient.connect(function(err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true},function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").updateOne({id: req.params.id}, {$set: req.body},function (err, result) {
             if (err) throw err;
@@ -41,7 +41,7 @@ router.put('/:id', function(req, res, next) {
 });
 
 router.delete('/:id', function(req, res, next) {
-    mongoClient.connect(function(err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true},function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").deleteOne({id: req.params.id}, function (err, result) {
             if (err) throw err;
