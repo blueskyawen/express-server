@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
 router.post('/add', function(req, res, next) {
     MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true}, function(err, db) {
         if (err) throw err;
-        db.db(dbName).collection("vms").insertOne(req.body, function (err, result) {
+        db.db(dbName).collection("vms").insertOne(Object.assign({id: Mock.Random.guid()},req.body), function (err, result) {
             if (err) throw err;
             db.close();
             res.send("文档插入成功");
