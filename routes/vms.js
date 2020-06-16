@@ -10,16 +10,57 @@ const dbName = "cloudenv";
 router.get('/', function(req, res, next) {
     mongoClient.connect(function(err, db) {
         if (err) throw err;
-        var addVm = {id: "001", name: "my-vm", status: "active"};
-        db.db(dbName).collection("vms").insertOne(addVm, function (err, res2) {
+        db.db(dbName).collection("vms").find({}).toArray(function (err, result) {
             if (err) throw err;
-            console.log("文档插入成功");
             db.close();
-            res.send(addVm);
+            res.send(result);
         });
     });
 });
 
+router.post('/add', function(req, res, next) {
+    mongoClient.connect(function(err, db) {
+        if (err) throw err;
+        db.db(dbName).collection("vms").insertOne(req.body, function (err, result) {
+            if (err) throw err;
+            db.close();
+            res.send("文档插入成功");
+        });
+    });
+});
+
+router.put('/:id', function(req, res, next) {
+    mongoClient.connect(function(err, db) {
+        if (err) throw err;
+        db.db(dbName).collection("vms").updateOne({id: req.params.id}, {$set: req.body},function (err, result) {
+            if (err) throw err;
+            db.close();
+            res.send("文档Modify成功");
+        });
+    });
+});
+
+router.delete('/:id', function(req, res, next) {
+    mongoClient.connect(function(err, db) {
+        if (err) throw err;
+        db.db(dbName).collection("vms").deleteOne({id: req.params.id}, function (err, result) {
+            if (err) throw err;
+            db.close();
+            res.send("文档Delete成功");
+        });
+    });
+});
+
+router.get('/:id', function(req, res, next) {
+    mongoClient.connect(function(err, db) {
+        if (err) throw err;
+        db.db(dbName).collection("vms").find({id: req.params.id}).limit(1).toArray(function (err, result) {
+            if (err) throw err;
+            db.close();
+            res.send(result);
+        });
+    });
+});
 
 module.exports = router;
 
