@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/vms";
+var url = "mongodb://localhost:27017";
 var mongoClient = new MongoClient(url,{ useNewUrlParser: true, useUnifiedTopology: true });
 var Mock = require('mockjs');
 
 const dbName = "cloudenv";
 
 router.get('/', function(req, res, next) {
-    mongoClient.connect(function(err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true},function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").find({}).toArray(function (err, result) {
             if (err) throw err;
@@ -52,7 +52,7 @@ router.delete('/:id', function(req, res, next) {
 });
 
 router.get('/:id', function(req, res, next) {
-    mongoClient.connect(function(err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true},function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").find({id: req.params.id}).limit(1).toArray(function (err, result) {
             if (err) throw err;
