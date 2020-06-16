@@ -8,7 +8,7 @@ var Mock = require('mockjs');
 const dbName = "cloudenv";
 
 router.get('/', function(req, res, next) {
-    MongoClient.connect(url,{ useNewUrlParser: true},function(err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true},function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").find({}).toArray(function (err, result) {
             if (err) throw err;
@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/add', function(req, res, next) {
-    MongoClient.connect(url, { useNewUrlParser: true}, function(err, db) {
+    MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true}, function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").insertOne(req.body, function (err, result) {
             if (err) throw err;
@@ -30,7 +30,7 @@ router.post('/add', function(req, res, next) {
 });
 
 router.put('/:id', function(req, res, next) {
-    MongoClient.connect(url,{ useNewUrlParser: true},function(err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true},function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").updateOne({id: req.params.id}, {$set: req.body},function (err, result) {
             if (err) throw err;
@@ -41,7 +41,7 @@ router.put('/:id', function(req, res, next) {
 });
 
 router.delete('/:id', function(req, res, next) {
-    MongoClient.connect(url,{ useNewUrlParser: true},function(err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true},function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").deleteOne({id: req.params.id}, function (err, result) {
             if (err) throw err;
@@ -52,12 +52,12 @@ router.delete('/:id', function(req, res, next) {
 });
 
 router.get('/:id', function(req, res, next) {
-    MongoClient.connect(url,{ useNewUrlParser: true},function(err, db) {
+    MongoClient.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true},function(err, db) {
         if (err) throw err;
         db.db(dbName).collection("vms").find({id: req.params.id}).limit(1).toArray(function (err, result) {
             if (err) throw err;
             db.close();
-            res.send(result);
+            res.send(Array.isArray(result) ? result[0] : {});
         });
     });
 });
