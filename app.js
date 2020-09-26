@@ -4,9 +4,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var createError = require('http-errors');
 
-var indexRouter = require('./routes/index');
+/*var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var vmsRouter = require('./routes/vms');
+var vmsRouter = require('./routes/vms');*/
+var authRouter = require('./routes/author');
+var clusterRouter = require('./routes/cluster');
+var alarmRouter = require('./routes/alarm');
 
 var app = express();
 
@@ -17,10 +20,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.all('*',function (req,res,next) {
-    res.header('Access-Control-Allow-Origin','*');
-    res.header('Access-Control-Allow-Headers','Origin,X-Requested-With,Content-Type,Accept');
-    res.header('Access-Control-Allow-Methods','PUT,POST,GET,DELETE,OPTIONS');
-    res.header('Content-Type','application/json;charset=utf-8');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type,language-option');
+    res.header('Access-Control-Allow-Methods', 'GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH');
+    res.header('X-Powered-By', ' 3.2.1');
+    res.header('Content-Type', 'application/json;charset=utf-8');
     if (req.method === 'OPTIONS') {
         res.status(200).send();
     } else {
@@ -28,18 +33,26 @@ app.all('*',function (req,res,next) {
     }
 });
 
-app.use('/', indexRouter);
+/*app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/vms', vmsRouter);
+app.use('/vms', vmsRouter);*/
+app.use('/api/author', authRouter);
+app.use('/api/cluster', clusterRouter);
+app.use('/api/alarm', alarmRouter);
 
-app.use(function (req,res,next) {
-    next(createError(404));
-});
-app.use(function (err,req,res,next) {
+
+// error handler
+app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
     res.locals.message = err.message;
-    res.locals.error = req.app.get('env')==='development' ? err : {};
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.json({
+        message: err.message,
+        error: err
+    });
 });
 
 module.exports = app;
